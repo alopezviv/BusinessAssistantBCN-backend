@@ -41,19 +41,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     		FilterChain filterChain) throws IOException, ServletException {
     	try {
 	        String authorizationHeader = request.getHeader(SecurityConstants.HEADER_STRING);
-	        System.err.print(1);
 	        if(authorizationHeaderIsInvalid(authorizationHeader)){
 	        	 SecurityContextHolder.clearContext();
-	        	 System.err.print(2);	
 	         }else {
 	        	Claims claims = validateToken(request);
-	        	
 /*	        	
 	        	// Comprobación que el token contiene claims 'exp' y AUTHORITIES
 	        	if(claims.getExpiration() != null) && claims.get(SecurityConstants.AUTHORITIES) != null)
 */
-	        	if(claims.getExpiration() != null) {
-	        		System.err.print("Claims not Null");
+	        	if(claims.getExpiration() != null) {	        		
 	        		setUpSpringAuthentication(claims);
 	        	}
 	        	else
@@ -75,7 +71,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     private Claims validateToken(HttpServletRequest request) {
 		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING).replace(SecurityConstants.TOKEN_PREFIX, "");
-		//System.err.print("Token " + jwtToken);
 		return Jwts.parserBuilder()
 				.setSigningKey(SecurityConstants.SECRET.getBytes())
 				.build()
@@ -96,8 +91,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				claims.getSubject(), null,authorities);
-		System.err.print(authenticationToken);
-		
 		SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 	}
     
