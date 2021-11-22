@@ -17,14 +17,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 //import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.businessassistantbcn.login.config.SecurityConfigProperties;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -32,14 +33,15 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
-
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    
+    @Autowired
+    SecurityConfigProperties properties;
     @Override
     protected void doFilterInternal(HttpServletRequest request,
     		HttpServletResponse response,
     		FilterChain filterChain) throws IOException, ServletException {
     	try {
+    		System.err.print(properties.getLogin()+properties.getSecret());
 	        String authorizationHeader = request.getHeader(SecurityConstants.HEADER_STRING);
 	        if(authorizationHeaderIsInvalid(authorizationHeader)){
 	        	 SecurityContextHolder.clearContext();
@@ -63,9 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
     
     private boolean authorizationHeaderIsInvalid(String authorizationHeader) {
-    	if(authorizationHeader == null) {
-    		System.err.print("null header");
-    	}
+    	
         return authorizationHeader == null || !authorizationHeader.startsWith(SecurityConstants.TOKEN_PREFIX);
     }
     
@@ -87,7 +87,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				null,
 				authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 */
-		System.err.print(claims.getSubject());
+		
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				claims.getSubject(), null,authorities);

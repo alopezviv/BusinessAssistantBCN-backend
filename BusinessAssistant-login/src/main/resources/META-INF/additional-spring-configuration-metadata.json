@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "security.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'security.secret'"
+  },
+  {
+    "name": "security.login",
+    "type": "java.lang.String",
+    "description": "A description for 'security.login'"
+  }
+]}
