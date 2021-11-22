@@ -1,14 +1,10 @@
 package com.businessassistantbcn.login.security;
 
-
-
 /*El código comentado debe reincorporarse si los JWT de autorización empiezan a incluir
  * entre sus claims una lista de perfiles con rótulo SecurityConstants.AUTHORITIES
  */
 
 import java.io.IOException;
-import java.util.ArrayList;
-//import java.util.List;
 //import java.util.stream.Collectors;
 import java.util.List;
 
@@ -17,11 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 //import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -63,10 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
     
     private boolean authorizationHeaderIsInvalid(String authorizationHeader) {
-    	if(authorizationHeader == null) {
-    		System.err.print("null header");
-    	}
-        return authorizationHeader == null || !authorizationHeader.startsWith(SecurityConstants.TOKEN_PREFIX);
+    	return authorizationHeader == null || !authorizationHeader.startsWith(SecurityConstants.TOKEN_PREFIX);
     }
     
     private Claims validateToken(HttpServletRequest request) {
@@ -87,10 +76,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				null,
 				authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 */
-		System.err.print(claims.getSubject());
-		List<GrantedAuthority> authorities = new ArrayList<>();
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-				claims.getSubject(), null,authorities);
+				claims.getSubject(), null, List.of());
 		SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 	}
     
